@@ -60,22 +60,20 @@ public class FileUtlis {
             // c指定解析的文件和编码格式
             parser.setInput(fis, "utf-8");
 
-            int eventType = parser.getEventType();      // 获得事件类型
+            int eventType = parser.getEventType();
             String id;
             String token = "";
             while (eventType != XmlPullParser.END_DOCUMENT) {
-                String tagName = parser.getName();  // 获得当前节点的名称
+                String tagName = parser.getName();
 
                 switch (eventType) {
-                    case XmlPullParser.START_TAG:       // 当前等于开始节点  <person>
+                    case XmlPullParser.START_TAG:
                         if ("map".equals(tagName)) {
-                            // 需要把上面设置好值的person对象添加到集合中
-                            //  personList.add(person);
-                        } else if ("string".equals(tagName)) { // <person id="1">
+
                             id = parser.getAttributeValue(null, "name");
                             if (id.equals("userinfo")) {
                                 str = true;
-                                //SPUtils.remove(getApplicationContext(),"userinfo");
+
                                 userInfo = (UserInfo) JSON.parseObject(parser.nextText(), UserInfo.class);
                             }
                             if (id.equals("cloudidinfo")) {
@@ -85,15 +83,13 @@ public class FileUtlis {
                             if (id.equals("token")) {
                                 str = true;
                                 token = parser.nextText();
-                                //SPUtils.put(getApplicationContext(),"token",parser.nextText());
+
                             }
-                            //person.setId(Integer.valueOf(id));
                         }
                         break;
-                    case XmlPullParser.END_TAG:     // </persons>
+                    case XmlPullParser.END_TAG:
                         if ("map".equals(tagName)) {
-                            // 需要把上面设置好值的person对象添加到集合中
-                            //  personList.add(person);
+
                             if (!str) {
                                 SPUtils.remove(mContext, "userinfo");
                                 SPUtils.remove(mContext, "token");
@@ -108,7 +104,7 @@ public class FileUtlis {
                     default:
                         break;
                 }
-                eventType = parser.next();      // 获得下一个事件类型
+                eventType = parser.next();
             }
         } catch (Exception e) {
             e.printStackTrace();
