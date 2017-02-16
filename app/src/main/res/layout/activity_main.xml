@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <GridView
+        android:id="@+id/grids"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#999999"
+        android:horizontalSpacing="1dp"
+        android:verticalSpacing="1dp"
+        android:padding="1dp"
+        android:numColumns="2"
+        android:layout_below="@+id/ddddd" />
+
+    <RelativeLayout
+        android:id="@+id/ddddd"
+        android:layout_width="match_parent"
+        android:layout_height="196dp"
+        android:background="?attr/colorPrimaryDark"
+        android:paddingTop="15dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="3dp"
+
+        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <Button
+            android:textSize="25.0px"
+            android:id="@+id/btn_master_shs"
+            android:textColor="#ffffff"
+            android:background="@drawable/button"
+            android:layout_width="120dp"
+            android:layout_height="30dp"
+            android:text="一键签到"
+            android:layout_marginBottom="11dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+        <com.hlxyjqd.yjqd.ViewUtils.CircleImageView
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@mipmap/ic_launcher"
+            android:id="@+id/XCRoundImageView"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+        android:visibility="visible"
+        android:gravity="center"
+        android:id="@+id/id_username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:textSize="20dp"
+        android:text="未登录"
+            android:layout_below="@+id/XCRoundImageView"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginTop="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true" />
+
+        <TextView
+            android:text="经验:N/N"
+            android:gravity="center"
+            android:textSize="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView5"
+            android:layout_above="@+id/btn_master_shs"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <numberprogressbar.NumberProgressBar
+            android:id="@+id/numberbar1"
+            android:layout_width="wrap_content"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="20dp"
+            android:paddingTop="30dp"
+            app:progress_current="0"
+            style="@style/NumberProgressBar_Default"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/id_username"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+    </RelativeLayout>
+
+</RelativeLayout>
