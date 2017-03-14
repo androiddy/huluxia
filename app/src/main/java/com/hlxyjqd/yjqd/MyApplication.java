@@ -43,6 +43,7 @@ public class MyApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+
         StubManifest.ENABLE_IO_REDIRECT = true;
         StubManifest.ENABLE_INNER_SHORTCUT = false;
         try {
