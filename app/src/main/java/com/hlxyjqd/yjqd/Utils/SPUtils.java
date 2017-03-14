@@ -128,7 +128,7 @@ public class SPUtils {
      *
      * @author zhy
      */
-    private static class SharedPreferencesCompat {
+    public static class SharedPreferencesCompat {
         private static final Method sApplyMethod = findApplyMethod();
 
         /**

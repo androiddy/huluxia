@@ -22,6 +22,7 @@ import org.apache.http.Header;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 
@@ -32,18 +33,25 @@ import java.util.ArrayList;
 public class HlxModelImpl implements HlxModel {
     @Override
     public void LoadHlxXml(Context mContext, String path, OnLoadHlxListener listener) {
-        File file = new File(mContext.getCacheDir().getAbsolutePath(), "hlx.xml");
-        FileUtlis.CopyHlxXml(mContext, file, path);
-        Object[] objects = FileUtlis.parserXmlFromLocal(mContext, file);
-        if (file.exists()) {
-            if (objects != null) {
-                listener.onSuccess((UserInfo) objects[0], (CloudidInfo) objects[1]);
+        File file = new File(path);
+        String psthindex = "/data/data/com.hlxyjqd.yjqd/shared_prefs/hlx.xml";
+        try {
+            FileUtlis.copyFile(file, new File(psthindex));
+            if (file.exists()) {
+                Object[] objects = FileUtlis.parserXmlFromLocal(mContext, new File(psthindex));
+                if (objects != null) {
+                    listener.onSuccess((UserInfo) objects[0], (CloudidInfo) objects[1]);
+                } else {
+                    listener.onError("配置文件解析失败！可能是没有登陆！");
+                }
             } else {
-                listener.onError("用户信息获取失败！请检查root权限或者网络链接是否错误或者葫芦侠是否处于登录状态！错误码:1");
+                listener.onError("配置文件获取失败");
             }
-        } else {
-            listener.onError("用户信息获取失败！请检查root权限或者网络链接是否错误或者葫芦侠是否处于登录状态！错误码:2");
+        } catch (IOException e) {
+            e.printStackTrace();
+            listener.onError("配置文件获取失败－1");
         }
+
     }
 
     @Override
@@ -52,7 +60,7 @@ public class HlxModelImpl implements HlxModel {
 
             @Override
             public void onFailure(int i, Header[] headers, final String s, Throwable throwable) {
-                listener.onError("用户信息获取失败！请检查root权限或者网络链接是否错误或者葫芦侠是否处于登录状态！错误码:5");
+                listener.onError("板块信息获取失败");
             }
 
             @Override
@@ -89,7 +97,7 @@ public class HlxModelImpl implements HlxModel {
                 HttpUtils.asyncHttpClient.get(urls, new JsonHttpResponseHandler() {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        listener.onError("用户信息获取失败！请检查root权限或者网络链接是否错误或者葫芦侠是否处于登录状态！错误码:6");
+                        listener.onError("用户信息获取失败");
                     }
 
                     @Override
@@ -105,7 +113,7 @@ public class HlxModelImpl implements HlxModel {
     @Override
     public void AllSign(ArrayList arrayList, final OnLoadHlxListener listener) {
         if (arrayList == null || arrayList.size() <= 0) {
-            listener.onError("用户信息获取失败！请检查root权限或者网络链接是否错误或者葫芦侠是否处于登录状态！错误码:14");
+            listener.onError("用户信息获取失败－2");
             return;
         }
         final String[] sta = {""};
@@ -114,7 +122,7 @@ public class HlxModelImpl implements HlxModel {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                     sta[0] = "1";
-                    listener.onError("用户信息获取失败！请检查root权限或者网络链接是否错误或者葫芦侠是否处于登录状态！错误码:4");
+                    listener.onError("签到错误");
                 }
 
                 @Override
@@ -123,27 +131,19 @@ public class HlxModelImpl implements HlxModel {
                     if (signinInfo != null) {
                         if (signinInfo.getStatus() != 1) {
                             sta[0] = "2";
-                            listener.onError("登陆授权过期！请去重新登陆！");
+                            listener.onError("登陆授权过期或这板块已经关版！请去重新登陆！");
                         } else {
                             listener.onSuccess(signinInfo);
                         }
                     } else {
                         sta[0] = "3";
-                        listener.onError("用户信息获取失败！请检查root权限或者网络链接是否错误或者葫芦侠是否处于登录状态！错误码:3");
+                        listener.onError("签到错误－1");
                     }
                 }
             });
         }
-        if (sta[0].equals("")) {
-            listener.onToast("一键签到成功！");
-            listener.onSuccess((SigninInfo) null);
-        } else if (sta[0].equals("1")) {
-            listener.onError("用户信息获取失败！请检查root权限或者网络链接是否错误或者葫芦侠是否处于登录状态！错误码:4");
-        } else if (sta[0].equals("2")) {
-            listener.onError("登陆授权过期！请去重新登陆！");
-        } else {
-            listener.onError("用户信息获取失败！请检查root权限或者网络链接是否错误或者葫芦侠是否处于登录状态！错误码:3");
-        }
+        listener.onToast("一键签到成功！请检查是否有遗漏！");
+        listener.onSuccess((SigninInfo) null);
     }
 
 
@@ -170,7 +170,7 @@ public class HlxModelImpl implements HlxModel {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                listener.onError("用户信息获取失败！请检查root权限或者网络链接是否错误或者葫芦侠是否处于登录状态！错误码:10");
+                listener.onError("获取签到状态失败");
             }
         });
     }
@@ -186,7 +186,7 @@ public class HlxModelImpl implements HlxModel {
         HttpUtils.asyncHttpClient.get(url, new JsonHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                listener.onError("用户信息获取失败！请检查root权限或者网络链接是否错误或者葫芦侠是否处于登录状态！错误码:7");
+                listener.onError("签到失败");
 
             }
 
@@ -201,7 +201,7 @@ public class HlxModelImpl implements HlxModel {
                     listener.onToast(name.getText() + " 签到成功！");
                     listener.onSuccess((SigninInfo) null);
                 } else {
-                    listener.onError("用户信息获取失败！请检查root权限或者网络链接是否错误或者葫芦侠是否处于登录状态！错误码:9");
+                    listener.onError("签到失败－2");
                 }
             }
         });

@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.hlxyjqd.yjqd.Bean.UserAllInfo;
 import com.hlxyjqd.yjqd.R;
 import com.hlxyjqd.yjqd.View.Impl.MainActivity;
@@ -18,11 +19,11 @@ import java.util.ArrayList;
  * Created by zhangzhongping on 17/1/1.
  */
 
-public  class  RunRankAdapter extends BaseAdapter {
+public class RunRankAdapter extends BaseAdapter {
     ArrayList<UserAllInfo> ls;
     MainActivity mContext;
     View view;
-    private LayoutInflater v ;
+    private LayoutInflater v;
 
     public RunRankAdapter(MainActivity context,
                           ArrayList<UserAllInfo> list) {
@@ -30,9 +31,11 @@ public  class  RunRankAdapter extends BaseAdapter {
         ls = list;
         mContext = new WeakReference<MainActivity>(context).get();
     }
-    public ArrayList getArrayList(){
+
+    public ArrayList getArrayList() {
         return ls;
     }
+
     @Override
     public int getCount() {
         return ls.size();
@@ -50,31 +53,31 @@ public  class  RunRankAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        final UserAllInfo appUnit=ls.get(position);
+        final UserAllInfo appUnit = ls.get(position);
         RunRankAdapter.ViewHolder1 holder = null;
         view = convertView;
-        if(view==null){
+        if (view == null) {
             holder = new RunRankAdapter.ViewHolder1();
             view = v.inflate(R.layout.itme_, null);
             holder.time1 = (ImageView) view.findViewById(R.id.imageView);
             holder.time = (TextView) view.findViewById(R.id.textView);
             holder.name = (TextView) view.findViewById(R.id.textView2);
             view.setTag(holder);
-        }else{
-            holder = (RunRankAdapter.ViewHolder1)  view.getTag();
+        } else {
+            holder = (RunRankAdapter.ViewHolder1) view.getTag();
         }
         Picasso.with(mContext).load(appUnit.getIcon()).into(holder.time1);
-        if(appUnit.getSignintext()==null){
+        if (appUnit.getSignintext() == null) {
             appUnit.setSignintext("初始化中");
-            mContext.mPresenter.LoadState(appUnit.getSignincheckurl(),appUnit,holder);
+            mContext.mPresenter.LoadState(appUnit.getSignincheckurl(), appUnit, holder);
         }
-        holder.name.setText("状态："+appUnit.getSignintext());
+        holder.name.setText("状态：" + appUnit.getSignintext());
         holder.time.setText(appUnit.getTitle());
         return view;
     }
 
     public class ViewHolder1 {
-        public  TextView time;
+        public TextView time;
         public TextView name;
         public ImageView time1;
 

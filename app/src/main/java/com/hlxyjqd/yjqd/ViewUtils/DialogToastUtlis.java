@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import com.hlxyjqd.yjqd.Utils.ToastUtils;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -43,8 +45,6 @@ public class DialogToastUtlis {
 
 
     public void Toast(String index,Context mContext){
-        Toast toast = Toast.makeText(mContext,index,Toast.LENGTH_LONG);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
+        ToastUtils.showSingleToast(index);
     }
 }

@@ -1,13 +1,16 @@
 package com.hlxyjqd.yjqd.View.Impl;
 
 
+import android.graphics.Point;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import com.dalimao.library.util.FloatUtil;
 import com.hlxyjqd.yjqd.Adapter.RunRankAdapter;
 import com.hlxyjqd.yjqd.Bean.CloudidInfo;
 import com.hlxyjqd.yjqd.Bean.SigninInfo;
@@ -16,6 +19,7 @@ import com.hlxyjqd.yjqd.Bean.UserInfo;
 import com.hlxyjqd.yjqd.Presenter.HlxPresenter;
 import com.hlxyjqd.yjqd.R;
 import com.hlxyjqd.yjqd.Utils.SPUtils;
+import com.hlxyjqd.yjqd.Utils.VUiKit;
 import com.hlxyjqd.yjqd.View.HlxXmlView;
 import com.hlxyjqd.yjqd.ViewUtils.AlertDialog;
 import com.hlxyjqd.yjqd.ViewUtils.CircleImageView;
@@ -25,9 +29,10 @@ import com.squareup.picasso.Picasso;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
+import circleprogress.FloatBallView;
 import numberprogressbar.NumberProgressBar;
 
-public class MainActivity extends BaseActivity<HlxXmlView, HlxPresenter> implements HlxXmlView ,View.OnClickListener{
+public class MainActivity extends BaseActivity<HlxXmlView, HlxPresenter> implements HlxXmlView, View.OnClickListener {
     String path = "";
     private GridView grid;
     private Button btn_master_sh;
@@ -43,24 +48,13 @@ public class MainActivity extends BaseActivity<HlxXmlView, HlxPresenter> impleme
     @Override
     protected void onResume() {
         super.onResume();
-        int var = (int) SPUtils.get(getApplicationContext(), index, 0);
-        if (var == 1) {
-            mPresenter.Loadxml(path, getApplicationContext());
-        } else {
-            actionSheetDialog = new AlertDialog(this);
-            actionSheetDialog.builder().setCancelable(false).setTitle("提示信息").setMsg("1:请确保手机有Root权限并且同意此软件获取\r\n2:请确保当前葫芦侠处于登录状态中\r\n3:同意此软件获取Root权限").setPositiveButton("确定", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    SPUtils.put(getApplicationContext(), index, 1);
-                    mPresenter.Loadxml(path, getApplicationContext());
-                }
-            }).show();
-        }
+        mPresenter.Loadxml(path, getApplicationContext());
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FloatUtil.hideFloatView(getApplicationContext(), FloatBallView.class, false);
         Bundle bundle = this.getIntent().getExtras();
         path = bundle.getString("PATH");
         index = bundle.getString("INDEX");
@@ -143,7 +137,7 @@ public class MainActivity extends BaseActivity<HlxXmlView, HlxPresenter> impleme
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         UserAllInfo userAllInfo = (UserAllInfo) runRankAdapter.getItem(position);
-                        mPresenter.SingleSign(userAllInfo.getSigninurl(),view);
+                        mPresenter.SingleSign(userAllInfo.getSigninurl(), view);
                     }
                 });
             }
@@ -190,12 +184,12 @@ public class MainActivity extends BaseActivity<HlxXmlView, HlxPresenter> impleme
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.btn_master_shs:
                 if (runRankAdapter != null && runRankAdapter.getArrayList() != null) {
                     mPresenter.AllSign(runRankAdapter.getArrayList());
                 }
-            break;
+                break;
         }
     }
 }

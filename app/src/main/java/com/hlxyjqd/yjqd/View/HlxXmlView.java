@@ -11,6 +11,7 @@ import java.util.ArrayList;
  */
 
 public interface HlxXmlView {
+
     void ShowLoading();
 
     void CloseLoading();
