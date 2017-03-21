@@ -155,7 +155,7 @@ public class HlxModelImpl implements HlxModel {
                 super.onSuccess(statusCode, headers, response);
                 final SigninInfo signinInfo = JSON.parseObject(response.toString(), SigninInfo.class);
                 if (signinInfo.getStatus() != 1) {
-                    listener.onError("登陆授权过期！请去重新登陆！");
+                    listener.onError("登陆授权过期或这板块已经关版！请去重新登陆！");
                     userAllInfo.setSignintext(signinInfo.getMsg());
                 } else {
                     if (signinInfo.getSignin() == 0) {
@@ -195,7 +195,7 @@ public class HlxModelImpl implements HlxModel {
                 final SigninInfo signinInfo = JSON.parseObject(response.toString(), SigninInfo.class);
                 if (signinInfo != null) {
                     if (signinInfo.getStatus() == 0) {
-                        listener.onError("登陆授权过期！请去重新登陆！");
+                        listener.onError("登陆授权过期或这板块已经关版！请去重新登陆！");
                         return;
                     }
                     listener.onToast(name.getText() + " 签到成功！");

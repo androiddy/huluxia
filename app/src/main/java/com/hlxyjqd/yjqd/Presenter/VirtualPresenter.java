@@ -42,10 +42,10 @@ public class VirtualPresenter extends BasePresenter<InstallRunView> {
                 .subscribe(new RxSubscriber<InstalledAppInfo>() {
                     @Override
                     public void _onNext(InstalledAppInfo list) {
-                        if (list != null) {
+                        if ("NULL".equals(list.getWhyInfo())) {
                             getView().InstallComplete(list);
                         } else {
-                            getView().InstallError("初始化失败");
+                            getView().InstallError(list.getWhyInfo());
                         }
                     }
 
@@ -61,13 +61,13 @@ public class VirtualPresenter extends BasePresenter<InstallRunView> {
         Subscription CopyApp = liveApi.CopyApp()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new RxSubscriber<File>() {
+                .subscribe(new RxSubscriber<InstalledAppInfo>() {
                     @Override
-                    public void _onNext(File list) {
-                        if (list != null) {
-                            getView().CopyComplete(list);
+                    public void _onNext(InstalledAppInfo list) {
+                        if ("NULL".equals(list.getWhyInfo())) {
+                            getView().CopyComplete(list.getApkPathInfo());
                         } else {
-                            getView().CopyError("初始化失败");
+                            getView().CopyError(list.getWhyInfo());
                         }
                     }
 
@@ -86,10 +86,10 @@ public class VirtualPresenter extends BasePresenter<InstallRunView> {
                 .subscribe(new RxSubscriber<InstalledAppInfo>() {
                     @Override
                     public void _onNext(InstalledAppInfo list) {
-                        if (list != null) {
+                        if ("NULL".equals(list.getWhyInfo())) {
                             getView().InstallComplete(list);
                         } else {
-                            getView().InstallError("初始化失败");
+                            getView().InstallError(list.getWhyInfo());
                         }
                     }
 

@@ -33,7 +33,7 @@ public class VirtualApi {
         return service.addVirtualApp(app);
     }
 
-    public Observable<File> CopyApp(){
+    public Observable<InstalledAppInfo> CopyApp(){
         return service.CopyApp();
     }
 

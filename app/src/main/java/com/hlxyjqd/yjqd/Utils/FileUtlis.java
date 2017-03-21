@@ -162,7 +162,6 @@ public class FileUtlis {
         Object[] objects = null;
         SharedPreferences sharedPreferences = mContext.getSharedPreferences("hlx", 0);
         if (sharedPreferences.contains("userinfo")) {
-            Log.e("132", "userinfo");
             str = true;
             userInfo = (UserInfo) JSON.parseObject(sharedPreferences.getString("userinfo", ""), UserInfo.class);
         }
@@ -170,13 +169,11 @@ public class FileUtlis {
             cloudidInfo = (CloudidInfo) JSON.parseObject(sharedPreferences.getString("cloudidinfo", ""), CloudidInfo.class);
         }
         if (sharedPreferences.contains("token")) {
-            Log.e("132", "token");
             str = true;
             if (userInfo != null) {
                 userInfo.setToken(sharedPreferences.getString("token", ""));
             }
         }
-        Log.e("132", str + "");
         if (str) {
             objects = new Object[2];
             objects[0] = userInfo;

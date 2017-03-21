@@ -3,32 +3,16 @@ package com.hlxyjqd.yjqd;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.graphics.Point;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Vibrator;
 import android.support.annotation.Nullable;
-import android.view.Gravity;
-import android.view.View;
-
-import com.dalimao.library.util.FloatUtil;
-import com.hlxyjqd.yjqd.Utils.VUiKit;
-import com.hlxyjqd.yjqd.View.Impl.MainActivity;
-
-import circleprogress.FloatBallView;
 
 /**
  * 作者：zhangzhongping on 17/3/13 02:05
  * 邮箱：android_dy@163.com
  */
 public class MyService extends Service {
-
-    FloatBallView floatBallView = null;
 
     @Nullable
     @Override
@@ -60,22 +44,5 @@ public class MyService extends Service {
         Notification notification = builder.build();
         startForeground(1, notification);
         return super.onStartCommand(intent, flags, startId);
-    }
-
-    public void Show(final Context context) {
-        floatBallView = new FloatBallView(context);
-        FloatUtil.showSmartFloat(floatBallView, Gravity.LEFT | Gravity.CENTER, new Point(0, 0), null, true);
-        floatBallView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, com.hlxyjqd.yjqd.View.Impl.MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                Bundle bundle = new Bundle();
-                bundle.putString("PATH", "/data/data/com.hlxyjqd.yjqd/virtual/data/user/0/com.huluxia.gametools/shared_prefs/config.xml");
-                bundle.putString("INDEX", "hlxvar");
-                intent.putExtras(bundle);
-                context.startActivity(intent);
-            }
-        });
     }
 }

@@ -1,5 +1,6 @@
 package com.lody.virtual.remote;
 
+import android.app.Instrumentation;
 import android.content.pm.ApplicationInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -26,12 +27,33 @@ public final class InstalledAppInfo implements Parcelable {
             return new InstalledAppInfo[size];
         }
     };
+    public String WhyInfo = "NULL";
+    public File apkPathInfo;
     public String packageName;
     public String apkPath;
     public String libPath;
     public boolean dependSystem;
     public int appId;
 
+    public String getWhyInfo() {
+        return WhyInfo;
+    }
+
+    public void setWhyInfo(String whyInfo) {
+        WhyInfo = whyInfo;
+    }
+
+    public File getApkPathInfo() {
+        return apkPathInfo;
+    }
+
+    public void setApkPathInfo(File apkPathInfo) {
+        this.apkPathInfo = apkPathInfo;
+    }
+
+    public InstalledAppInfo(){
+
+    }
     public InstalledAppInfo(String packageName, String apkPath, String libPath, boolean dependSystem, int appId) {
         this.packageName = packageName;
         this.apkPath = apkPath;

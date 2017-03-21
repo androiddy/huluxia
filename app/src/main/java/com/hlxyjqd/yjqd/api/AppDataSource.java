@@ -12,7 +12,7 @@ public interface AppDataSource {
 
 	Observable<InstalledAppInfo> addVirtualApp(File app);
 
-	Observable<File> CopyApp();
+	Observable<InstalledAppInfo> CopyApp();
 
     Observable<InstalledAppInfo> VerifyApp();
 }

@@ -36,6 +36,7 @@ public class MyApplication extends Application {
             @Override
             public void onServerProcess() {
                 VirtualCore.get().setAppRequestListener(new MyAppRequestListener(MyApplication.this));
+                virtualCore.addVisibleOutsidePackage("com.tencent.mobileqq");
             }
         });
     }

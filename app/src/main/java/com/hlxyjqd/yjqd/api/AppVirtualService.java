@@ -35,45 +35,52 @@ public class AppVirtualService implements AppDataSource {
         return Observable.create(new Observable.OnSubscribe<InstalledAppInfo>() {
             @Override
             public void call(Subscriber<? super InstalledAppInfo> subscriber) {
-                InstalledAppInfo installedApp = VirtualCore.get().getInstalledAppInfo("com.tencent.mobileqq", 0);
+                InstalledAppInfo installedAppInfo = new InstalledAppInfo();
                 PackageInfo packageInfo = isAppInstalled(MyApplication.getContext(), "com.tencent.mobileqq");
-                if (packageInfo != null && installedApp == null) {
-                    VirtualCore.get().installPackage(packageInfo.applicationInfo.sourceDir, InstallStrategy.COMPARE_VERSION | InstallStrategy.DEPEND_SYSTEM_IF_EXIST);
+                if (packageInfo == null) {
+                    installedAppInfo.setWhyInfo("没有安装QQ");
+                    subscriber.onNext(installedAppInfo);
+                    return;
                 }
                 PackageInfo pkgInfo = null;
                 try {
                     pkgInfo = MyApplication.getContext().getPackageManager().getPackageArchiveInfo(app.getAbsolutePath(), 0);
                     pkgInfo.applicationInfo.sourceDir = app.getAbsolutePath();
                     pkgInfo.applicationInfo.publicSourceDir = app.getAbsolutePath();
-                    InstalledAppInfo installedAppInfos = VirtualCore.get().getInstalledAppInfo(pkgInfo.packageName, 0);
-                    if (installedAppInfos != null) {
-                        subscriber.onNext(installedAppInfos);
+                    installedAppInfo = VirtualCore.get().getInstalledAppInfo(pkgInfo.packageName, 0);
+                    if (installedAppInfo != null) {
+                        subscriber.onNext(installedAppInfo);
                     } else {
                         InstallResult installResult = VirtualCore.get().installPackage(pkgInfo.applicationInfo.sourceDir, InstallStrategy.COMPARE_VERSION);
                         if (installResult.isSuccess || installResult.isUpdate) {
                             InstalledAppInfo installed = VirtualCore.get().getInstalledAppInfo(pkgInfo.packageName, 0);
                             subscriber.onNext(installed);
                         } else {
-                            subscriber.onNext(null);
+                            installedAppInfo.setWhyInfo("huluxia安装失败");
+                            subscriber.onNext(installedAppInfo);
                         }
                     }
                 } catch (Exception e) {
-                    subscriber.onNext(null);
+                    installedAppInfo.setWhyInfo("获取huluxia信息错误");
+                    subscriber.onNext(installedAppInfo);
                 }
             }
         });
     }
 
     @Override
-    public Observable<File> CopyApp() {
-        return Observable.create(new Observable.OnSubscribe<File>() {
+    public Observable<InstalledAppInfo> CopyApp() {
+        return Observable.create(new Observable.OnSubscribe<InstalledAppInfo>() {
             @Override
-            public void call(Subscriber<? super File> subscriber) {
+            public void call(Subscriber<? super InstalledAppInfo> subscriber) {
+                InstalledAppInfo installedAppInfos = new InstalledAppInfo();
                 File file = CopyAssetsFile("huluxia.jsp", Environment.getExternalStorageDirectory().getAbsolutePath());
                 if (file.exists()) {
-                    subscriber.onNext(file);
+                    installedAppInfos.setApkPathInfo(file);
+                    subscriber.onNext(installedAppInfos);
                 } else {
-                    subscriber.onNext(null);
+                    installedAppInfos.setWhyInfo("huluxia文件未找到");
+                    subscriber.onNext(installedAppInfos);
                 }
             }
         });
@@ -84,12 +91,13 @@ public class AppVirtualService implements AppDataSource {
         return Observable.create(new Observable.OnSubscribe<InstalledAppInfo>() {
             @Override
             public void call(Subscriber<? super InstalledAppInfo> subscriber) {
-                InstalledAppInfo installedApp = VirtualCore.get().getInstalledAppInfo("com.tencent.mobileqq", 0);
                 InstalledAppInfo installedAppInfos = VirtualCore.get().getInstalledAppInfo("com.huluxia.gametools", 0);
-                if (installedAppInfos != null && installedApp != null) {
+                if (installedAppInfos != null) {
                     subscriber.onNext(installedAppInfos);
                 } else {
-                    subscriber.onNext(null);
+                    installedAppInfos = new InstalledAppInfo();
+                    installedAppInfos.setWhyInfo("验证失败");
+                    subscriber.onNext(installedAppInfos);
                 }
             }
         });
@@ -103,13 +111,7 @@ public class AppVirtualService implements AppDataSource {
             packageInfo = null;
             e.printStackTrace();
         }
-        if (packageInfo == null) {
-            //System.out.println("没有安装");
-            return packageInfo;
-        } else {
-            //System.out.println("已经安装");
-            return packageInfo;
-        }
+        return packageInfo;
     }
 
     private File CopyAssetsFile(String filename, String des) {

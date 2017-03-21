@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.Log;
 import android.util.TypedValue;
 
 import com.lody.virtual.client.core.VirtualCore;
@@ -98,6 +97,7 @@ import java.lang.reflect.Method;
         if (activityInfo == null) {
             return method.invoke(who, args);
         }
+
         int res = VActivityManager.get().startActivity(intent, activityInfo, resultTo, options, resultWho, requestCode, VUserHandle.myUserId());
         if (res != 0 && resultTo != null && requestCode > 0) {
             VActivityManager.get().sendActivityResult(resultTo, resultWho, requestCode);

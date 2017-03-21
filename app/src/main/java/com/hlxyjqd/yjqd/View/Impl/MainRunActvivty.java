@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.net.VpnService;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -32,6 +33,8 @@ import java.io.File;
 import java.util.List;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+import jp.co.taosoftware.android.packetcapture.CaptureData;
+import jp.co.taosoftware.android.packetcapture.PacketCaptureService;
 
 /**
  * 作者：zhangzhongping on 17/3/12 17:56
@@ -46,7 +49,7 @@ public class MainRunActvivty extends BaseActivity<InstallRunView, VirtualPresent
     @Override
     protected void onResume() {
         super.onResume();
-        if (((int) SPUtils.get(getApplicationContext(), "index", -1)) != -1) {
+        if (((int) SPUtils.get(getApplicationContext(), "index", -1)) == VUiKit.getVersion()) {
             textView.setVisibility(View.VISIBLE);
             button.setVisibility(View.GONE);
             progressBar.setVisibility(View.VISIBLE);
@@ -75,7 +78,7 @@ public class MainRunActvivty extends BaseActivity<InstallRunView, VirtualPresent
             @Override
             public void onClick(View v) {
                 AlertDialog actionSheetDialog = new AlertDialog(MainRunActvivty.this);
-                actionSheetDialog.builder().setCancelable(false).setTitle("使用说明").setMsg("1:确保手机已经安装QQ\r\n\r\n2:进入葫芦侠后需要重新的登录\r\n\r\n3:葫芦侠在首次拉起QQ登录时可能会时间较长！如果长时间无效果退出重进！\r\n\r\n4:" +
+                actionSheetDialog.builder().setCancelable(false).setTitle("使用说明").setMsg("1:确保手机已经安装QQ\r\n\r\n2:进入葫芦侠后需要重新的登录\r\n\r\n3:如果QQ登录时提示非正版应用，多登录几次即可！！\r\n\r\n4:" +
                         "如果登陆后还是无法使用请退出重新进入即可！\r\n\r\n5:点击状态栏提示框即可跳转签到界面\r\n\r\n6:如果无法正常显示状态栏请手动在设置中打开状态栏权限！\r\n\r\n7:首次使用初始化时间会略长！请耐心等待！\r\n\r\n8:黑屏等待即可！").setPositiveButton("开启", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -124,7 +127,7 @@ public class MainRunActvivty extends BaseActivity<InstallRunView, VirtualPresent
             @Override
             public void run() {
                 getApplicationContext().startService(new Intent(getApplicationContext(), MyService.class));
-                SPUtils.put(getApplicationContext(), "index", 1);
+                SPUtils.put(getApplicationContext(), "index", VUiKit.getVersion());
             }
         }, 4000);
     }
@@ -144,9 +147,24 @@ public class MainRunActvivty extends BaseActivity<InstallRunView, VirtualPresent
                             }
                         }, R.string.btn_show,
                 Manifest.permission.ACCESS_FINE_LOCATION);
-
-
+       /* Intent prepare = VpnService.prepare(this);
+        if (prepare != null) {
+            startActivityForResult(prepare, 0);
+            return;
+        }
+        onActivityResult(0, RESULT_OK, null);*/
     }
+
+   /* @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            Intent prepare = new Intent(this, PacketCaptureService.class);
+            String m = CaptureData.getDumpFileName();
+            String a = CaptureData.getDumpDirName(this);
+            prepare.putExtra(getPackageName() + "intent_extra_key_string_capture_file_name", a + "/" + m);
+            startService(prepare);
+        }
+    }*/
 
     public void VerifyApp() {
         checkPermission(new CheckPermListener() {

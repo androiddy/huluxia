@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.lody.virtual.client.core.PatchManager;
 import com.lody.virtual.client.env.VirtualRuntime;
@@ -29,7 +28,6 @@ public abstract class StubActivity extends Activity {
         // Try to acquire the actually component information.
 		StubActivityRecord r = new StubActivityRecord(stubIntent);
 		if (r.intent != null) {
-			Log.e("123",r.info.packageName);
 			if (TextUtils.equals(r.info.processName, VirtualRuntime.getProcessName()) && r.userId == VUserHandle.myUserId()) {
                 // Retry to inject the HCallback to instead of the exist one.
 				PatchManager.getInstance().checkEnv(HCallbackHook.class);
