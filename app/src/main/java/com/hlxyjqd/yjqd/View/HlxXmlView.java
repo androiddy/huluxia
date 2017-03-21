@@ -20,6 +20,7 @@ public interface HlxXmlView {
 
     void ShowLoadSuccess(UserInfo userInfo);
 
+
     void ShowLoadSuccess(ArrayList arrayList);
 
     void ShowLoadSuccess(SigninInfo signinInfo);
