@@ -18,7 +18,7 @@ public class MyApplication extends Application {
         context = this;
         super.onCreate();
         final VirtualCore virtualCore = VirtualCore.get();
-        getSharedPreferences("hhhh", 0).edit().putString("132", "132").commit();
+        getSharedPreferences("test", 0).edit().putString("132", "132").commit();
         virtualCore.initialize(new VirtualCore.VirtualInitializer() {
 
             @Override
