@@ -19,6 +19,8 @@ public class MyApplication extends Application {
         super.onCreate();
         final VirtualCore virtualCore = VirtualCore.get();
         getSharedPreferences("test.test", 0).edit().putString("test", "test").commit();
+
+        //va初始化
         virtualCore.initialize(new VirtualCore.VirtualInitializer() {
 
             @Override
@@ -28,6 +30,7 @@ public class MyApplication extends Application {
 
             @Override
             public void onVirtualProcess() {
+                //用于拦截一些手机系统的东西
                 virtualCore.setComponentDelegate(new MyComponentDelegate());
                 virtualCore.setPhoneInfoDelegate(new MyPhoneInfoDelegate());
                 virtualCore.setTaskDescriptionDelegate(new MyTaskDescriptionDelegate());
@@ -35,12 +38,23 @@ public class MyApplication extends Application {
 
             @Override
             public void onServerProcess() {
+                //用于监听va框架启动的app安装其他程序时调用监听
+                //例如huluxia下载游戏后将会自动安装到va框架中   这里监听安装失败以及成功
                 VirtualCore.get().setAppRequestListener(new MyAppRequestListener(MyApplication.this));
+                //添加外部app依赖   用于拉起非va框架安装的app
+                //实例 添加QQ依赖
                 virtualCore.addVisibleOutsidePackage("com.tencent.mobileqq");
             }
         });
     }
 
+    /**
+     *
+     *@author zhangzhongping
+     * created at 17/3/23 12:25
+     *
+     * va框架初始化
+     */
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);

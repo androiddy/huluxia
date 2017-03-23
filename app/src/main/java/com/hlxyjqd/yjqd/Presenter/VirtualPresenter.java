@@ -101,6 +101,15 @@ public class VirtualPresenter extends BasePresenter<InstallRunView> {
         addSubscrebe(VerifyApp);
     }
 
+
+    /**
+     *
+     *@author zhangzhongping
+     * created at 17/3/23 12:23
+     *用于启动va框架中的app
+     * @param model va框架中的app信息可以用va框架获取
+     * @param userId 用户id用于多开   如果只是双开0即可
+     */
     public void launchApp(final InstalledAppInfo model, final int userId) {
         final Intent intent = VirtualCore.get().getLaunchIntent(model.packageName, userId);
         VirtualCore.get().setLoadingPage(intent, (Activity) getView());
@@ -127,6 +136,7 @@ public class VirtualPresenter extends BasePresenter<InstallRunView> {
                 @Override
                 public void onDone(Object o) {
                     VActivityManager.get().startActivity(intent, userId);
+                    //isAppRunning获取指定包名是否在va中已经运行
                     if (VActivityManager.get().isAppRunning(model.packageName, 0)) {
                         getView().RunComplete("OK");
                     } else {

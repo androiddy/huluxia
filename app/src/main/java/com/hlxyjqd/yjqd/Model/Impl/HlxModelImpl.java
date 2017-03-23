@@ -45,11 +45,11 @@ public class HlxModelImpl implements HlxModel {
                     listener.onError("配置文件解析失败！可能是没有登陆！");
                 }
             } else {
-                listener.onError("配置文件获取失败");
+                listener.onError("配置文件获取失败(请重试！)");
             }
         } catch (IOException e) {
             e.printStackTrace();
-            listener.onError("配置文件获取失败－1");
+            listener.onError("配置文件获取失败－1(请重试！)");
         }
 
     }
@@ -60,7 +60,7 @@ public class HlxModelImpl implements HlxModel {
 
             @Override
             public void onFailure(int i, Header[] headers, final String s, Throwable throwable) {
-                listener.onError("板块信息获取失败");
+                listener.onError("板块信息获取失败(请重试！)");
             }
 
             @Override
@@ -97,7 +97,7 @@ public class HlxModelImpl implements HlxModel {
                 HttpUtils.asyncHttpClient.get(urls, new JsonHttpResponseHandler() {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                        listener.onError("用户信息获取失败");
+                        listener.onError("用户信息获取失败(请重试！)");
                     }
 
                     @Override
@@ -113,16 +113,14 @@ public class HlxModelImpl implements HlxModel {
     @Override
     public void AllSign(ArrayList arrayList, final OnLoadHlxListener listener) {
         if (arrayList == null || arrayList.size() <= 0) {
-            listener.onError("用户信息获取失败－2");
+            listener.onError("用户信息获取失败－2(请重试！)");
             return;
         }
-        final String[] sta = {""};
         for (final UserAllInfo user : (ArrayList<UserAllInfo>) arrayList) {
             HttpUtils.asyncHttpClient.get(user.getSigninurl(), new JsonHttpResponseHandler() {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                    sta[0] = "1";
-                    listener.onError("签到错误");
+                    listener.onError("签到错误(请重试！)");
                 }
 
                 @Override
@@ -130,19 +128,17 @@ public class HlxModelImpl implements HlxModel {
                     final SigninInfo signinInfo = JSON.parseObject(response.toString(), SigninInfo.class);
                     if (signinInfo != null) {
                         if (signinInfo.getStatus() != 1) {
-                            sta[0] = "2";
                             listener.onError("登陆授权过期或这板块已经关版！请去重新登陆！");
                         } else {
                             listener.onSuccess(signinInfo);
                         }
                     } else {
-                        sta[0] = "3";
-                        listener.onError("签到错误－1");
+                        listener.onError("签到错误－1(请重试！)");
                     }
                 }
             });
         }
-        listener.onToast("一键签到成功！请检查是否有遗漏！");
+        listener.onToast("一键签到成功！请检查是否有遗漏！(最好多点几次)");
         listener.onSuccess((SigninInfo) null);
     }
 
@@ -155,7 +151,7 @@ public class HlxModelImpl implements HlxModel {
                 super.onSuccess(statusCode, headers, response);
                 final SigninInfo signinInfo = JSON.parseObject(response.toString(), SigninInfo.class);
                 if (signinInfo.getStatus() != 1) {
-                    listener.onError("登陆授权过期或这板块已经关版！请去重新登陆！");
+                    listener.onError("登陆授权过期或这板块已经关版！请去重新登陆重试！");
                     userAllInfo.setSignintext(signinInfo.getMsg());
                 } else {
                     if (signinInfo.getSignin() == 0) {
@@ -170,7 +166,7 @@ public class HlxModelImpl implements HlxModel {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
                 super.onFailure(statusCode, headers, throwable, errorResponse);
-                listener.onError("获取签到状态失败");
+                listener.onError("获取签到状态失败(请重试！)");
             }
         });
     }
@@ -179,14 +175,14 @@ public class HlxModelImpl implements HlxModel {
     public void SingleSign(String url, final View sh, final OnLoadHlxListener listener) {
         TextView state = (TextView) sh.findViewById(R.id.textView2);
         final TextView name = (TextView) sh.findViewById(R.id.textView);
-        if (state.getText().toString().contains("已签到")) {
+        if ("已签到".contains(state.getText().toString())) {
             listener.onToast(name.getText() + " 已经签到过了！");
             return;
         }
         HttpUtils.asyncHttpClient.get(url, new JsonHttpResponseHandler() {
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, JSONObject errorResponse) {
-                listener.onError("签到失败");
+                listener.onError("签到失败(请重试！)");
 
             }
 
@@ -195,13 +191,13 @@ public class HlxModelImpl implements HlxModel {
                 final SigninInfo signinInfo = JSON.parseObject(response.toString(), SigninInfo.class);
                 if (signinInfo != null) {
                     if (signinInfo.getStatus() == 0) {
-                        listener.onError("登陆授权过期或这板块已经关版！请去重新登陆！");
+                        listener.onError("登陆授权过期或这板块已经关版！请去重新登陆重试！");
                         return;
                     }
                     listener.onToast(name.getText() + " 签到成功！");
                     listener.onSuccess((SigninInfo) null);
                 } else {
-                    listener.onError("签到失败－2");
+                    listener.onError("签到失败－2(请重试！)");
                 }
             }
         });

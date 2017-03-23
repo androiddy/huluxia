@@ -1,20 +1,12 @@
 package com.hlxyjqd.yjqd.View.Impl;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
-import android.location.LocationManager;
-import android.net.VpnService;
 import android.os.Handler;
-import android.telephony.TelephonyManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.hlxyjqd.yjqd.Bean.PackageAppData;
 import com.hlxyjqd.yjqd.MyService;
 import com.hlxyjqd.yjqd.Presenter.VirtualPresenter;
 import com.hlxyjqd.yjqd.R;
@@ -30,11 +22,8 @@ import com.hlxyjqd.yjqd.updata.manager.UpdateManager;
 import com.lody.virtual.remote.InstalledAppInfo;
 
 import java.io.File;
-import java.util.List;
 
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
-import jp.co.taosoftware.android.packetcapture.CaptureData;
-import jp.co.taosoftware.android.packetcapture.PacketCaptureService;
 
 /**
  * 作者：zhangzhongping on 17/3/12 17:56

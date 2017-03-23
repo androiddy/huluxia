@@ -7,6 +7,7 @@ import com.lody.virtual.remote.InstalledAppInfo;
 
 /**
  * @author Lody
+ * va框架需要用的实例类
  */
 
 public class MultiplePackageAppData implements AppData {

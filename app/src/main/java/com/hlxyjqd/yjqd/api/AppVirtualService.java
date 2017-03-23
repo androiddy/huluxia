@@ -30,6 +30,14 @@ public class AppVirtualService implements AppDataSource {
     }
 
 
+    /**
+     *
+     *@author zhangzhongping
+     * created at 17/3/23 12:17
+     *用于va框架安装apk
+     *@param app apk路径
+     *@return 返回InstalledAppInfo 用于启动时的参数
+     */
     @Override
     public Observable<InstalledAppInfo> addVirtualApp(final File app) {
         return Observable.create(new Observable.OnSubscribe<InstalledAppInfo>() {
@@ -47,10 +55,12 @@ public class AppVirtualService implements AppDataSource {
                     pkgInfo = MyApplication.getContext().getPackageManager().getPackageArchiveInfo(app.getAbsolutePath(), 0);
                     pkgInfo.applicationInfo.sourceDir = app.getAbsolutePath();
                     pkgInfo.applicationInfo.publicSourceDir = app.getAbsolutePath();
+                    //getInstalledAppInfo 获取va框架中是否安装的指定包名的app ！0是用户id   如果双开的话0即可  如果多开需要添加相同包名时更改id   id用于启动时的参数以及获取信息时的参数
                     installedAppInfo = VirtualCore.get().getInstalledAppInfo(pkgInfo.packageName, 0);
                     if (installedAppInfo != null) {
                         subscriber.onNext(installedAppInfo);
                     } else {
+                        //installPackage  用于安装 参数1=apk路径
                         InstallResult installResult = VirtualCore.get().installPackage(pkgInfo.applicationInfo.sourceDir, InstallStrategy.COMPARE_VERSION);
                         if (installResult.isSuccess || installResult.isUpdate) {
                             InstalledAppInfo installed = VirtualCore.get().getInstalledAppInfo(pkgInfo.packageName, 0);
